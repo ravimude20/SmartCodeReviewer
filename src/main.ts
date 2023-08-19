@@ -7,7 +7,7 @@ import minimatch from "minimatch";
 
 const GITHUB_TOKEN: string = core.getInput("GITHUBTOKEN");
 const OPENAI_API_KEY: string = core.getInput("OPENAI_API_KEY");
-const OPENAI_API_MODEL: string = "GPT-4";
+const OPENAI_API_MODEL: string = "gpt-3.5-turbo";
 
 console.log("step1");
 console.log(GITHUB_TOKEN);
