@@ -9,9 +9,6 @@ const GITHUB_TOKEN: string = core.getInput("GITHUBTOKEN");
 const OPENAI_API_KEY: string = core.getInput("OPENAI_API_KEY");
 const OPENAI_API_MODEL: string = core.getInput("OPENAI_API_MODEL");
 
-console.log("step1");
-console.log(GITHUB_TOKEN);
-
 const octokit = new Octokit({ auth: GITHUB_TOKEN });
 
 const configuration = new Configuration({
@@ -27,8 +24,6 @@ interface PRDetails {
   title: string;
   description: string;
 }
-
-console.log("step2");
 
 async function getPRDetails(): Promise<PRDetails> {
   const { repository, number } = JSON.parse(
@@ -48,8 +43,6 @@ async function getPRDetails(): Promise<PRDetails> {
   };
 }
 
-console.log("step3");
-
 async function getDiff(
   owner: string,
   repo: string,
@@ -64,8 +57,6 @@ async function getDiff(
   // @ts-expect-error - response.data is a string
   return response.data;
 }
-
-console.log("step4");
 
 async function analyzeCode(
   parsedDiff: File[],
