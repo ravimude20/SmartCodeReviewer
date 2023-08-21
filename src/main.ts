@@ -104,6 +104,7 @@ function createPrompt(file: File, chunk: Chunk, prDetails: PRDetails): string {
 - IMPORTANT: NEVER suggest adding comments to the code.
 - At the end of review comment suggest code changes.
 - Provide reference of best practices documentation if any.
+- Review lint errors.
 
 Review the following code diff in the file "${file.to
     }" and take the pull request title and description into account when writing the response.
