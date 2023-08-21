@@ -94,6 +94,7 @@ async function getBaseAndHeadShas(
 }
 
 function createPrompt(file: File, chunk: Chunk, prDetails: PRDetails): string {
+  console.log("111---", file, prDetails);
   return `Your task is to review pull requests. Instructions:
 - Provide the response in following JSON format:  [{"lineNumber":  <line_number>, "reviewComment": "<review comment>"}]
 - Do not give positive comments or compliments.
