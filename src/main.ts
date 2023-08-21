@@ -102,7 +102,7 @@ function createPrompt(file: File, chunk: Chunk, prDetails: PRDetails): string {
 - Write the comment in GitHub Markdown format.
 - Use the given description only for the overall context and only comment the code.
 - IMPORTANT: NEVER suggest adding comments to the code.
-- At the end of review comment suggest code changes.
+- IMPORTANT: Suggest best practises code snippet at the end.
 - Provide reference of best practices documentation if any.
 - Review lint errors.
 
