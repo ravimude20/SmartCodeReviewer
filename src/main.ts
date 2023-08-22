@@ -94,8 +94,6 @@ async function getBaseAndHeadShas(
 }
 
 function createPrompt(file: File, chunk: Chunk, prDetails: PRDetails): string {
-  core.debug(`programmingLanguage: ${programmingLanguage}`);
-  core.debug("111---", file, prDetails);
   return `Your task is to review pull requests. Instructions:
 - Provide the response in following JSON format:  [{"lineNumber":  <line_number>, "reviewComment": "<review comment>"}]
 - Do not give positive comments or compliments.
@@ -107,6 +105,7 @@ function createPrompt(file: File, chunk: Chunk, prDetails: PRDetails): string {
 - IMPORTANT: Suggest best practises code snippet at the end.
 - Provide reference of best practices documentation if any.
 - Review lint errors.
+- Prefix the start line of review with "AI Code Review:"
 
 Review the following code diff in the file "${file.to
     }" and take the pull request title and description into account when writing the response.
