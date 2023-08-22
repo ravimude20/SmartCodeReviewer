@@ -1,10 +1,8 @@
 {
-  "name": "open-ai-reviewer",
+  "name": "smart-code-reviewer",
   "version": "1.0.0",
-  "description": "Open AI powered code reviews",
+  "description": "AI based smart code reviews",
   "main": "lib/main.js",
-  "author": "Ville Saukkonen",
-  "license": "MIT",
   "scripts": {
     "build": "tsc",
     "package": "ncc build --source-map --license licenses.txt",
