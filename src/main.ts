@@ -1,10 +1,13 @@
-import * as core from "@actions/core";
-import { Octokit } from "@octokit/rest";
 import { readFileSync } from "fs";
-import minimatch from "minimatch";
+import * as core from "@actions/core";
 import { Configuration, OpenAIApi } from "openai";
+import { Octokit } from "@octokit/rest";
 import parseDiff, { Chunk, File } from "parse-diff";
-import { GITHUB_TOKEN, OPENAI_API_KEY, OPENAI_API_MODEL } from "./constants";
+import minimatch from "minimatch";
+
+const GITHUB_TOKEN: string = core.getInput("GITHUBTOKEN");
+const OPENAI_API_KEY: string = core.getInput("OPENAI_API_KEY");
+const OPENAI_API_MODEL: string = core.getInput("OPENAI_API_MODEL");
 
 const octokit = new Octokit({ auth: GITHUB_TOKEN });
 
@@ -108,7 +111,7 @@ function createPrompt(file: File, chunk: Chunk, prDetails: PRDetails): string {
 - Prefix the start line of review with "AI Code Review:"
 
 Review the following code diff in the file "${file.to
-    }" and take the pull request title and description into account when writing the response.
+}" and take the pull request title and description into account when writing the response.
   
 Pull request title: ${prDetails.title}
 Pull request description:
@@ -122,9 +125,9 @@ Git diff to review:
 \`\`\`diff
 ${chunk.content}
 ${chunk.changes
-      // @ts-expect-error - ln and ln2 exists where needed
-      .map((c) => `${c.ln ? c.ln : c.ln2} ${c.content}`)
-      .join("\n")}
+  // @ts-expect-error - ln and ln2 exists where needed
+  .map((c) => `${c.ln ? c.ln : c.ln2} ${c.content}`)
+  .join("\n")}
 \`\`\`
 `;
 }
