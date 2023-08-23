@@ -130,7 +130,6 @@ function createPrompt(file, chunk, prDetails) {
 - IMPORTANT: Suggest best practises code snippet at the end.
 - Provide reference of best practices documentation if any.
 - Review lint errors.
-- Prefix the start line of review with "AI Code Review:"
 
 Review the following code diff in the file "${file.to}" and take the pull request title and description into account when writing the response.
   
