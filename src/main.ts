@@ -5,18 +5,23 @@ import { Octokit } from "@octokit/rest";
 import parseDiff, { Chunk, File } from "parse-diff";
 import minimatch from "minimatch";
 
+// Read GitHub Action inputs
 const GITHUB_TOKEN: string = core.getInput("GITHUBTOKEN");
 const OPENAI_API_KEY: string = core.getInput("OPENAI_API_KEY");
 const OPENAI_API_MODEL: string = core.getInput("OPENAI_API_MODEL");
 
+// Initialize Octokit with GitHub token
 const octokit = new Octokit({ auth: GITHUB_TOKEN });
 
+// Initialize OpenAI Configuration with API key
 const configuration = new Configuration({
   apiKey: OPENAI_API_KEY,
 });
 
+// Create an instance of OpenAI API
 const openai = new OpenAIApi(configuration);
 
+// Define the structure for PR details
 interface PRDetails {
   owner: string;
   repo: string;
@@ -25,6 +30,7 @@ interface PRDetails {
   description: string;
 }
 
+// Function to retrieve PR details from GitHub event
 async function getPRDetails(): Promise<PRDetails> {
   const { repository, number } = JSON.parse(
     readFileSync(process.env.GITHUB_EVENT_PATH || "", "utf8")
@@ -43,8 +49,7 @@ async function getPRDetails(): Promise<PRDetails> {
   };
 }
 
-console.log("step3");
-
+// Function to retrieve PR diff from GitHub
 async function getDiff(
   owner: string,
   repo: string,
@@ -60,17 +65,24 @@ async function getDiff(
   return response.data;
 }
 
+// Function to analyze code and generate AI-driven review comments
 async function analyzeCode(
   parsedDiff: File[],
   prDetails: PRDetails
 ): Promise<Array<{ body: string; path: string; line: number }>> {
+  // Array to store generated comments
   const comments: Array<{ body: string; path: string; line: number }> = [];
 
+  // Iterate through parsed diff
   for (const file of parsedDiff) {
-    if (file.to === "/dev/null") continue; // Ignore deleted files
+    // Ignore deleted files
+    if (file.to === "/dev/null") continue;
     for (const chunk of file.chunks) {
+      // Create a prompt for AI based on file and chunk details
       const prompt = createPrompt(file, chunk, prDetails);
+      // Get AI response
       const aiResponse = await getAIResponse(prompt);
+      // If AI response is available, create comments
       if (aiResponse) {
         const newComments = createComment(file, chunk, aiResponse);
         if (newComments) {
@@ -82,6 +94,7 @@ async function analyzeCode(
   return comments;
 }
 
+// Function to retrieve base and head SHAs for a PR
 async function getBaseAndHeadShas(
   owner: string,
   repo: string,
@@ -98,9 +111,10 @@ async function getBaseAndHeadShas(
   };
 }
 
+// Function to create a prompt for AI based on code diff
 function createPrompt(file: File, chunk: Chunk, prDetails: PRDetails): string {
   return `Your task is to review pull requests. Instructions:
-- Provide the response in following JSON format:  [{"lineNumber":  <line_number>, "reviewComment": "<review comment>"}]
+- Provide the response in the following JSON format:  [{"lineNumber":  <line_number>, "reviewComment": "<review comment>"}]
 - Do not give positive comments or compliments.
 - Provide comments and suggestions ONLY if there is something to improve, otherwise return an empty array.
 - Write the comment in GitHub Markdown format.
@@ -123,13 +137,14 @@ Git diff to review:
 \`\`\`diff
 ${chunk.content}
 ${chunk.changes
-  // @ts-expect-error - ln and ln2 exists where needed
+  // @ts-expect-error - ln and ln2 exist where needed
   .map((c) => `${c.ln ? c.ln : c.ln2} ${c.content}`)
   .join("\n")}
 \`\`\`
 `;
 }
 
+// Function to get AI response for a prompt
 async function getAIResponse(prompt: string): Promise<Array<{
   lineNumber: string;
   reviewComment: string;
@@ -162,6 +177,7 @@ async function getAIResponse(prompt: string): Promise<Array<{
   }
 }
 
+// Function to create comments based on AI response
 function createComment(
   file: File,
   chunk: Chunk,
@@ -182,6 +198,7 @@ function createComment(
   });
 }
 
+// Function to create review comments on GitHub PR
 async function createReviewComment(
   owner: string,
   repo: string,
@@ -197,9 +214,13 @@ async function createReviewComment(
   });
 }
 
+// Main function to orchestrate the AI code review process
 async function main() {
+  // Get PR details
   const prDetails = await getPRDetails();
-  console.log("12313---", prDetails);
+  console.log("PR Details:", prDetails);
+
+  // Retrieve PR diff based on event action
   let diff: string | null;
   const eventData = JSON.parse(
     readFileSync(process.env.GITHUB_EVENT_PATH ?? "", "utf8")
@@ -231,6 +252,7 @@ async function main() {
     return;
   }
 
+  // Analyze the diff and generate review comments
   if (!diff) {
     console.log("No diff found");
     return;
@@ -250,6 +272,8 @@ async function main() {
   });
 
   const comments = await analyzeCode(filteredDiff, prDetails);
+
+  // Create review comments on GitHub PR
   if (comments.length > 0) {
     await createReviewComment(
       prDetails.owner,
@@ -260,7 +284,9 @@ async function main() {
   }
 }
 
+// Execute the main function and handle errors
 main().catch((error) => {
   console.error("Error:", error);
   process.exit(1);
 });
+
