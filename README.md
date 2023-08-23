@@ -1,15 +1,24 @@
 # Smart Code Reviewer
 
-Smart Code Reviewer is a GitHub Action that leverages OpenAI's GPT-4 API to provide intelligent feedback and suggestions on
-your pull requests. This powerful tool helps improve code quality and saves developers time by automating the code
-review process.
+Enhance your code review process with Smart Code Reviewer, an innovative GitHub Action powered by OpenAI's GPT-3.5-turbo API. Elevate your code quality and streamline developer efficiency by receiving insightful feedback and valuable suggestions on your pull requests, all without manual intervention.
+
+Smart Code Reviewer revolutionizes the way you assess code changes. With its advanced AI capabilities, it comprehensively analyzes your pull requests, offering a depth of understanding that traditional code review methods can't match. By identifying potential issues, suggesting optimizations, and highlighting best practices, it empowers you to make informed decisions and elevate the overall quality of your codebase.
 
 ## Features
 
-- Reviews pull requests using OpenAI's GPT-4 API.
-- Provides intelligent comments and suggestions for improving your code.
-- Filters out files that match specified exclude patterns.
-- Easy to set up and integrate into your GitHub workflow.
+1. Intelligent Feedback: Leverage the power of AI to receive feedback that goes beyond syntax errors. Uncover logic flaws, potential bugs, and architectural improvements, backed by the expertise of OpenAI's GPT-3.5-turbo model.
+
+2. Contextual Suggestions: Get contextually relevant suggestions for code enhancements, refactoring opportunities, and code structure improvements. Enhance your codebase's readability and maintainability effortlessly.
+
+3. Best Practice Enforcement: Ensure adherence to coding standards and best practices with Smart Code Reviewer's guidance. Receive recommendations for code patterns that align with industry norms, reducing technical debt and future maintenance challenges.
+
+4. Faster Iterations: With swift and thorough reviews, your development iterations become faster and more efficient. Merge high-quality code sooner, accelerating the pace of innovation.
+
+5. Seamless Integration: Implementing Smart Code Reviewer is a breeze. As a GitHub Action, it seamlessly integrates into your existing workflow, ensuring that code review AI is just a step away from your pull requests.
+
+6. Customization: Tailor Smart Code Reviewer to your project's needs. Fine-tune its feedback style, specific areas of focus, and more to align with your team's preferences.
+
+7. Elevate your development process with Smart Code Reviewer and unlock a new era of code quality, efficiency, and collaboration. Embrace the future of code review today and experience the transformative impact of AI-powered insights on your pull requests.
 
 ## Setup
 
