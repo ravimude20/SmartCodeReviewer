@@ -30,6 +30,44 @@ interface PRDetails {
   description: string;
 }
 
+// Function to create a prompt for AI based on code diff
+function createPrompt(file: File, chunk: Chunk, prDetails: PRDetails): string {
+  return `Your task is to review pull requests. Instructions:
+- Provide the response in following JSON format:  [{"lineNumber":  <line_number>, "reviewComment": "<review comment>"}]
+- Do not give positive comments or compliments.
+- Point out bad code practices.
+- Provide comments and suggestions ONLY if there is something to improve, otherwise return an empty array.
+- Write the comment in GitHub Markdown format.
+- Use the given description only for the overall context and only comment the code.
+- IMPORTANT: NEVER suggest adding comments to the code.
+- IMPORTANT: Suggest best practises code snippet at the end.
+- Provide reference of best practices documentation if any.
+- Review lint errors.
+- Prefix the start line of review with "AI Code Review:"
+
+Review the following code diff in the file "${
+    file.to
+  }" and take the pull request title and description into account when writing the response.
+  
+Pull request title: ${prDetails.title}
+Pull request description:
+
+---
+${prDetails.description}
+---
+
+Git diff to review:
+
+\`\`\`diff
+${chunk.content}
+${chunk.changes
+  // @ts-expect-error - ln and ln2 exist where needed
+  .map((c) => `${c.ln ? c.ln : c.ln2} ${c.content}`)
+  .join("\n")}
+\`\`\`
+`;
+}
+
 // Function to retrieve PR details from GitHub event
 async function getPRDetails(): Promise<PRDetails> {
   const { repository, number } = JSON.parse(
@@ -109,39 +147,6 @@ async function getBaseAndHeadShas(
     baseSha: prResponse.data.base.sha,
     headSha: prResponse.data.head.sha,
   };
-}
-
-// Function to create a prompt for AI based on code diff
-function createPrompt(file: File, chunk: Chunk, prDetails: PRDetails): string {
-  return `Your task is to review pull requests. Instructions:
-- Provide the response in the following JSON format:  [{"lineNumber":  <line_number>, "reviewComment": "<review comment>"}]
-- Do not give positive comments or compliments.
-- Provide comments and suggestions ONLY if there is something to improve, otherwise return an empty array.
-- Write the comment in GitHub Markdown format.
-- Use the given description only for the overall context and only comment the code.
-- IMPORTANT: NEVER suggest adding comments to the code.
-
-Review the following code diff in the file "${
-    file.to
-  }" and take the pull request title and description into account when writing the response.
-  
-Pull request title: ${prDetails.title}
-Pull request description:
-
----
-${prDetails.description}
----
-
-Git diff to review:
-
-\`\`\`diff
-${chunk.content}
-${chunk.changes
-  // @ts-expect-error - ln and ln2 exist where needed
-  .map((c) => `${c.ln ? c.ln : c.ln2} ${c.content}`)
-  .join("\n")}
-\`\`\`
-`;
 }
 
 // Function to get AI response for a prompt
