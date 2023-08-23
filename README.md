@@ -52,7 +52,7 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          exclude: "**/*.json, **/*.md" # Optional: exclude patterns separated by commas
+          exclude: "**/*.json, **/*.md" # Optional: exclude patterns separated by comma
 ```
 
 5. **Customize and Evolve:**
@@ -77,7 +77,6 @@ jobs:
 5. **Comments Elevate Excellence:**
    Empowers developers with suggestions, insights, and brilliance that enhance code quality.
 
-Embrace the future of code review—where human ingenuity merges with AI excellence for extraordinary results.
-
+Embrace the future of code review—where human ingenuity merges with AI excellence for extraordinary results
 ---
 **Experience Smart Code Reviewer: Elevate Your Code Quality, Unleash Innovation.**
